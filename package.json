@@ -1,0 +1,11 @@
+{
+  "name": "@appbuckets/inkflow-models",
+  "version": "3.0.0",
+  "description": "Inkflow Dedicated Types",
+  "types": "./types",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/mongoose": "^5.7.36"
+  }
+}
