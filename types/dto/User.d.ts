@@ -13,6 +13,8 @@ export namespace Dto {
 
       role?: number;
 
+      team: string;
+
       surname?: string;
     }
 

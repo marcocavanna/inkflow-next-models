@@ -1,3 +1,6 @@
+import * as mongoose from 'mongoose';
+
+
 export type {
   MongoDBAggregationInstruction
 } from './miscellaneous/mongodb-aggregation';
@@ -17,9 +20,24 @@ export type AnyObject = { [key: string]: any };
  * is a Plain object, without function field
  */
 export type APIResponse<T> = {
-  [K in keyof T]: T[K] extends (() => (void | any | Promise<any> | Promise<void>))
+  [K in keyof T]: T[K] extends (() => (void | any | Promise<any> | Promise<void> | mongoose.Document))
     ? never
-    : T[K] extends {}
-      ? APIResponse<T[K]>
-      : T[K]
+    : T[K] extends mongoose.Types.ObjectId
+      ? string
+      : T[K] extends (object | mongoose.Document)
+        ? APIResponse<T[K]>
+        : T[K]
 };
+
+
+/**
+ * @type PopulableField
+ *
+ * @description
+ * A Populable Field is a plain mongoose
+ * Object ID field that could be populated
+ * while performing mongoose query
+ */
+export type PopulableField<Document extends mongoose.Document, Key, PopulatedPath> = Key extends PopulatedPath
+  ? Document
+  : mongoose.Types.ObjectId;

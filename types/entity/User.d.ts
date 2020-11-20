@@ -1,6 +1,7 @@
 import * as mongoose from 'mongoose';
 
-import { APIResponse } from '../generic';
+import { APIResponse, PopulableField } from '../generic';
+import { TeamEntity } from './Team';
 
 
 export namespace UserEntity {
@@ -19,7 +20,8 @@ export namespace UserEntity {
    * this document will have virtuals and methods defined
    * into entity schema
    */
-  export interface Document extends Schema, Methods, Virtuals, mongoose.Document {
+  export interface Document<PopulatedPath extends keyof Schema = never>
+    extends Schema<PopulatedPath>, Methods, Virtuals, mongoose.Document {
   }
 
 
@@ -27,7 +29,8 @@ export namespace UserEntity {
    * The json interface type define the documents that will
    * be passed to client using API Endpoint response
    */
-  export interface JSON extends APIResponse<Omit<Schema, 'password'> & Virtuals> {
+  export interface JSON<PopulatedPath extends keyof Schema = never>
+    extends APIResponse<Omit<Schema<PopulatedPath>, 'password'> & Virtuals> {
     _id: string;
 
     id: string;
@@ -39,7 +42,7 @@ export namespace UserEntity {
    * that will be controlled by user and by API
    * this fields will be saved on database
    */
-  export interface Schema {
+  export interface Schema<PopulatedPath extends keyof Schema<any> = never> {
     /** The user Email */
     email: string;
 
@@ -69,6 +72,9 @@ export namespace UserEntity {
 
     /** User Role */
     role: ROLE;
+
+    /** User Team */
+    team: PopulableField<TeamEntity.Document, 'team', PopulatedPath>;
 
     /** The User Surname */
     surname: string;
@@ -105,7 +111,7 @@ export namespace UserEntity {
    * model class
    */
   export interface Statics {
-    test(): string;
+
   }
 
 
