@@ -1,10 +1,14 @@
 import * as mongoose from 'mongoose';
 
-import { APIResponse, PopulableField } from '../generic';
+import { APIResponse, PopulableCollection, PopulableField } from '../generic';
+import { RoleEntity } from './Role';
 import { TeamEntity } from './Team';
 
 
 export namespace UserEntity {
+
+  /** The set of the populable path */
+  export type PopulableFields = 'teams.role' | 'teams.team' | 'currentTeam';
 
   /**
    * The Model is used to create a new Entity
@@ -20,7 +24,7 @@ export namespace UserEntity {
    * this document will have virtuals and methods defined
    * into entity schema
    */
-  export interface Document<PopulatedPath extends keyof Schema = never>
+  export interface Document<PopulatedPath extends PopulableFields = never>
     extends Schema<PopulatedPath>, Methods, Virtuals, mongoose.Document {
   }
 
@@ -29,7 +33,7 @@ export namespace UserEntity {
    * The json interface type define the documents that will
    * be passed to client using API Endpoint response
    */
-  export interface JSON<PopulatedPath extends keyof Schema = never>
+  export interface JSON<PopulatedPath extends PopulableFields = never>
     extends APIResponse<Omit<Schema<PopulatedPath>, 'password'> & Virtuals> {
     _id: string;
 
@@ -42,7 +46,10 @@ export namespace UserEntity {
    * that will be controlled by user and by API
    * this fields will be saved on database
    */
-  export interface Schema<PopulatedPath extends keyof Schema<any> = never> {
+  export interface Schema<PopulatedPath extends PopulableFields = never> {
+    /** The user current team */
+    currentTeam: PopulableField<TeamEntity.Document, 'currentTeam', PopulatedPath>
+
     /** The user Email */
     email: string;
 
@@ -70,11 +77,11 @@ export namespace UserEntity {
     /** User settings and Preferences */
     preferences: Preferences.Schema;
 
-    /** User Role */
-    role: ROLE;
-
     /** User Team */
-    team: PopulableField<TeamEntity.Document, 'team', PopulatedPath>;
+    teams: {
+      role: PopulableCollection<RoleEntity.Document, 'teams.role', PopulatedPath>,
+      team: PopulableCollection<TeamEntity.Document, 'teams.team', PopulatedPath>
+    }[];
 
     /** The User Surname */
     surname: string;
@@ -100,9 +107,6 @@ export namespace UserEntity {
 
     /** User Initials */
     initials: string;
-
-    /** The Role Name Translation */
-    roleName: string;
   }
 
 
@@ -112,17 +116,6 @@ export namespace UserEntity {
    */
   export interface Statics {
 
-  }
-
-
-  export enum ROLE {
-    SECRETARY = 2,
-    COMMERCIAL = 3,
-    TECH = 4,
-    TECH_ADMINISTRATOR = 5,
-    FISCAL = 6,
-    OWNER = 8,
-    ADMINISTRATOR = 10
   }
 
   export namespace Preferences {

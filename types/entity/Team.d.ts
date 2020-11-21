@@ -1,9 +1,13 @@
 import * as mongoose from 'mongoose';
 
-import { APIResponse } from '../generic';
+import { APIResponse, PopulableVirtualCollection } from '../generic';
+import { RoleEntity } from './Role';
 
 
 export namespace TeamEntity {
+
+  /** Set of populable model path */
+  export type PopulableFields = 'roles';
 
   /**
    * The Model is used to create a new Entity
@@ -19,7 +23,8 @@ export namespace TeamEntity {
    * this document will have virtuals and methods defined
    * into entity schema
    */
-  export interface Document extends Schema, Methods, Virtuals, mongoose.Document {
+  export interface Document<PopulatedPath extends PopulableFields = never>
+    extends Schema<PopulatedPath>, Methods, Virtuals<PopulatedPath>, mongoose.Document {
   }
 
 
@@ -27,7 +32,8 @@ export namespace TeamEntity {
    * The json interface type define the documents that will
    * be passed to client using API Endpoint response
    */
-  export interface JSON extends APIResponse<Schema & Virtuals> {
+  export interface JSON<PopulatedPath extends PopulableFields = never>
+    extends APIResponse<Schema<PopulatedPath> & Virtuals<PopulatedPath>> {
     _id: string;
 
     id: string;
@@ -39,7 +45,7 @@ export namespace TeamEntity {
    * that will be controlled by user and by API
    * this fields will be saved on database
    */
-  export interface Schema {
+  export interface Schema<PopulatedPath extends PopulableFields = never> {
     /** The Team Name */
     name: string;
 
@@ -64,7 +70,9 @@ export namespace TeamEntity {
   /**
    * Describe all virtuals field
    */
-  export interface Virtuals {
+  export interface Virtuals<PopulatedPath extends PopulableFields = never> {
+    /** All roles related to Teams */
+    roles: PopulableVirtualCollection<RoleEntity.Document, 'roles', PopulatedPath>
   }
 
 

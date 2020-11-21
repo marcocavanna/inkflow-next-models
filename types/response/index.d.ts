@@ -1,11 +1,12 @@
 import { RegistryEntity, UserEntity } from '../entity';
+import { APIResponse } from '../generic';
 
 
 export namespace Response {
 
   export namespace Auth {
     export interface Login {
-      userData: UserEntity.JSON;
+      userData: APIResponse<Omit<UserEntity.JSON<'currentTeam' | 'teams.role' | 'teams.team'>, 'password'>>;
 
       accessToken: string;
     }

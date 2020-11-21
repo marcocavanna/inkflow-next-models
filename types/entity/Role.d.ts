@@ -4,46 +4,10 @@ import { APIResponse, PopulableField } from '../generic';
 import { TeamEntity } from './Team';
 
 
-export namespace RegistryEntity {
+export namespace RoleEntity {
 
-  /** The set of the populable path */
+  /** Set of populable model path */
   export type PopulableFields = 'team';
-
-  /**
-   * The Reference interface will be used to
-   * define each phone/mail/web registry reference
-   */
-  export interface Reference {
-
-  }
-
-  /**
-   * The Address interface will be used to
-   * define each single registry address
-   */
-  export interface Address {
-    _id: string;
-
-    city?: string;
-
-    country?: string;
-
-    emails: Reference[];
-
-    isRegisteredOffice?: boolean;
-
-    isShipmentOffice?: boolean;
-
-    phones: Reference[];
-
-    state?: string;
-
-    street?: string;
-
-    webs: Reference[];
-
-    zipCode?: string;
-  }
 
   /**
    * The Model is used to create a new Entity
@@ -82,35 +46,17 @@ export namespace RegistryEntity {
    * this fields will be saved on database
    */
   export interface Schema<PopulatedPath extends PopulableFields = never> {
-    /** The registry fiscalCode */
-    fiscalCode?: string;
+    /** Check or set if this role is Team Owner Role */
+    isOwner: boolean;
 
-    /** Registry head office */
-    headOffice?: Address;
-
-    /** Get or Set if Registry is an Active Customer */
-    isActiveCustomer: boolean;
-
-    /** Get or Set if Registry is an Active Supplier */
-    isActiveSupplier: boolean;
-
-    /** Get or Set if Registry is a Customer */
-    isCustomer: boolean;
-
-    /** Get or Set if Registry is a Supplier */
-    isSupplier: boolean;
-
-    /** The Registry Name */
+    /** Role Name */
     name: string;
 
-    /** The Registry SubName */
-    subName?: string;
+    /** Role rank */
+    rank: number;
 
-    /** Related Team */
+    /** Related team entity */
     team: PopulableField<TeamEntity.Document, 'team', PopulatedPath>
-
-    /** The Registry VAT Number */
-    vatNumber?: string;
   }
 
 

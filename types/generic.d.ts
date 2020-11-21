@@ -38,6 +38,24 @@ export type APIResponse<T> = {
  * Object ID field that could be populated
  * while performing mongoose query
  */
-export type PopulableField<Document extends mongoose.Document, Key, PopulatedPath> = Key extends PopulatedPath
+export type PopulableField<Document extends mongoose.Document,
+  Key,
+  PopulatedPath> = Key extends PopulatedPath
   ? Document
   : mongoose.Types.ObjectId;
+
+export type PopulableCollection<Document extends mongoose.Document,
+  Key, PopulatedPath> = Key extends PopulatedPath
+  ? mongoose.Types.DocumentArray<Document>
+  : mongoose.Types.ObjectId[];
+
+export type PopulableVirtualField<Document extends mongoose.Document,
+  Key,
+  PopulatedPath> = Key extends PopulatedPath
+  ? Document
+  : undefined;
+
+export type PopulableVirtualCollection<Document extends mongoose.Document,
+  Key, PopulatedPath> = Key extends PopulatedPath
+  ? mongoose.Types.DocumentArray<Document>
+  : undefined;
