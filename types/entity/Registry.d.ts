@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-import { APIResponse, PopulableField } from '../generic';
+import { APIResponse, Nullable } from '../generic';
 
 
 export namespace RegistryEntity {
@@ -13,7 +13,13 @@ export namespace RegistryEntity {
    * define each phone/mail/web registry reference
    */
   export interface Reference {
+    isFavorite: boolean;
 
+    label?: Nullable<string>;
+
+    ondaID: string;
+
+    value: string;
   }
 
   /**
@@ -23,25 +29,25 @@ export namespace RegistryEntity {
   export interface Address {
     _id: string;
 
-    city?: string;
+    city?: Nullable<string>;
 
-    country?: string;
+    country?: Nullable<string>;
 
     emails: Reference[];
 
-    isRegisteredOffice?: boolean;
+    isRegisteredOffice: boolean;
 
-    isShipmentOffice?: boolean;
+    isShipmentOffice: boolean;
 
     phones: Reference[];
 
-    state?: string;
+    state?: Nullable<string>;
 
-    street?: string;
+    street?: Nullable<string>;
 
     webs: Reference[];
 
-    zipCode?: string;
+    zipCode?: Nullable<string>;
   }
 
   /**
@@ -84,8 +90,14 @@ export namespace RegistryEntity {
    * this fields will be saved on database
    */
   export interface Schema<PopulatedPath extends PopulableFields = never> {
+    /** Emails list */
+    emails: Reference[];
+
+    /** Faxes lists */
+    faxes: Reference[];
+
     /** The registry fiscalCode */
-    fiscalCode?: string;
+    fiscalCode?: Nullable<string>;
 
     /** Registry head office */
     headOffice?: Address;
@@ -105,14 +117,26 @@ export namespace RegistryEntity {
     /** The Registry Name */
     name: string;
 
+    /** Pec Emails */
+    pecEmails: Reference[];
+
+    /** Phones */
+    phones: Reference[];
+
+    /** Shipment Offices */
+    shipmentOffices: Address[];
+
     /** The Registry SubName */
-    subName?: string;
+    subName?: Nullable<string>;
 
     /** Related Team */
     team: string;
 
     /** The Registry VAT Number */
-    vatNumber?: string;
+    vatNumber?: Nullable<string>;
+
+    /** Webs */
+    webs: Reference[];
   }
 
 

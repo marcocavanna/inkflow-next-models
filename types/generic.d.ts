@@ -11,6 +11,8 @@ export type {
 
 export type AnyObject = { [key: string]: any };
 
+export type Nullable<T> = T | null;
+
 /**
  * @type APIResponse
  *
