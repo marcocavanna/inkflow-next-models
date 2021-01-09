@@ -1,14 +1,12 @@
 import * as mongoose from 'mongoose';
 
-import { APIResponse, PopulableCollection, PopulableField } from '../generic';
-import { RoleEntity } from './Role';
-import { TeamEntity } from './Team';
+import { APIResponse } from '../generic';
 
 
 export namespace UserEntity {
 
   /** The set of the populable path */
-  export type PopulableFields = 'teams.role' | 'teams.team' | 'currentTeam';
+  export type PopulableFields = null;
 
   /**
    * The Model is used to create a new Entity
@@ -26,6 +24,9 @@ export namespace UserEntity {
    */
   export interface Document<PopulatedPath extends PopulableFields = never>
     extends Schema<PopulatedPath>, Methods, Virtuals, mongoose.Document {
+    _id: mongoose.Types.ObjectId;
+
+    id: string;
   }
 
 
@@ -47,9 +48,6 @@ export namespace UserEntity {
    * this fields will be saved on database
    */
   export interface Schema<PopulatedPath extends PopulableFields = never> {
-    /** The user current team */
-    currentTeam: PopulableField<TeamEntity.Document, 'currentTeam', PopulatedPath>
-
     /** The user Email */
     email: string;
 
@@ -77,11 +75,8 @@ export namespace UserEntity {
     /** User settings and Preferences */
     preferences: Preferences.Schema;
 
-    /** User Team */
-    teams: {
-      role: PopulableCollection<RoleEntity.Document, 'teams.role', PopulatedPath>,
-      team: PopulableCollection<TeamEntity.Document, 'teams.team', PopulatedPath>
-    }[];
+    /** User team Slug */
+    team: string;
 
     /** The User Surname */
     surname: string;
@@ -103,7 +98,7 @@ export namespace UserEntity {
    */
   export interface Virtuals {
     /** User Complete Name */
-    completeName: string;
+    displayName: string;
 
     /** User Initials */
     initials: string;

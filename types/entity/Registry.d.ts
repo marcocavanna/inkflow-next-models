@@ -1,7 +1,6 @@
 import * as mongoose from 'mongoose';
 
 import { APIResponse, PopulableField } from '../generic';
-import { TeamEntity } from './Team';
 
 
 export namespace RegistryEntity {
@@ -61,6 +60,9 @@ export namespace RegistryEntity {
    */
   export interface Document<PopulatedPath extends PopulableFields = never>
     extends Schema<PopulatedPath>, Methods, Virtuals, mongoose.Document {
+    _id: mongoose.Types.ObjectId;
+
+    id: string;
   }
 
 
@@ -107,7 +109,7 @@ export namespace RegistryEntity {
     subName?: string;
 
     /** Related Team */
-    team: PopulableField<TeamEntity.Document, 'team', PopulatedPath>
+    team: string;
 
     /** The Registry VAT Number */
     vatNumber?: string;

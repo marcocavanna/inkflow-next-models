@@ -6,7 +6,7 @@ export namespace Response {
 
   export namespace Auth {
     export interface Login {
-      userData: APIResponse<Omit<UserEntity.JSON<'currentTeam' | 'teams.role' | 'teams.team'>, 'password'>>;
+      userData: APIResponse<Omit<UserEntity.JSON, 'password'>>;
 
       accessToken: string;
     }
