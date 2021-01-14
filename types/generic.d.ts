@@ -13,6 +13,7 @@ export type AnyObject = { [key: string]: any };
 
 export type Nullable<T> = T | null;
 
+
 /**
  * @type APIResponse
  *
@@ -21,14 +22,42 @@ export type Nullable<T> = T | null;
  * an API call. The result of this operation
  * is a Plain object, without function field
  */
-export type APIResponse<T> = {
-  [K in keyof T]: T[K] extends (() => (void | any | Promise<any> | Promise<void> | mongoose.Document))
-    ? never
-    : T[K] extends mongoose.Types.ObjectId
-      ? string
-      : T[K] extends (object | mongoose.Document)
-        ? APIResponse<T[K]>
-        : T[K]
+
+type PrimitiveType = string | number | boolean;
+
+/** Convert Original ObjectID into String */
+type ObjectIDConversion<T> = T extends mongoose.Types.ObjectId
+  ? string
+  : T;
+
+/** Deep Transform a Document object into a plain Object */
+type DeepCreateObjectTransformer<T> = T extends PrimitiveType
+  ? T
+  : T extends mongoose.Types.DocumentArray<infer U>
+    ? Array<DeepCreateObjectTransformer<U>>
+    : T extends object
+      ? {
+        [V in keyof mongoose.NonFunctionProperties<mongoose.OmitReadonly<T>>]: T[V] extends object
+          ? DeepCreateObjectTransformer<T[V]>
+          : ObjectIDConversion<T[V]>
+      }
+      : ObjectIDConversion<T>;
+
+/** Convert a Backend Object into an API Response */
+export type APIResponse<T> = T extends Array<infer U>
+  ? Array<DeepCreateObjectTransformer<U>>
+  : DeepCreateObjectTransformer<T>;
+
+export type Populated<Document extends mongoose.Document, Key extends keyof Document> = Omit<Document, Key> & {
+  [Path in Key]: Exclude<Document[Path], EmptyVirtual | mongoose.Types.ObjectId | mongoose.Types.ObjectId[]>
+};
+
+export type AugmentedSchema<Schema> = {
+  [Path in keyof Schema]: Schema[Path] extends Array<infer U>
+    ? U extends (string | number | boolean | null | undefined)
+      ? U[]
+      : mongoose.Types.DocumentArray<U & mongoose.Types.Embedded>
+    : Schema[Path]
 };
 
 
@@ -40,24 +69,12 @@ export type APIResponse<T> = {
  * Object ID field that could be populated
  * while performing mongoose query
  */
-export type PopulableField<Document extends mongoose.Document,
-  Key,
-  PopulatedPath> = Key extends PopulatedPath
-  ? Document
-  : mongoose.Types.ObjectId;
+type EmptyVirtual = undefined;
 
-export type PopulableCollection<Document extends mongoose.Document,
-  Key, PopulatedPath> = Key extends PopulatedPath
-  ? mongoose.Types.DocumentArray<Document>
-  : mongoose.Types.ObjectId[];
+export type PopulableField<Schema> = Schema | mongoose.Types.ObjectId;
 
-export type PopulableVirtualField<Document extends mongoose.Document,
-  Key,
-  PopulatedPath> = Key extends PopulatedPath
-  ? Document
-  : undefined;
+export type PopulableCollection<Schema> = Schema[] | mongoose.Types.ObjectId[];
 
-export type PopulableVirtualCollection<Document extends mongoose.Document,
-  Key, PopulatedPath> = Key extends PopulatedPath
-  ? mongoose.Types.DocumentArray<Document>
-  : undefined;
+export type PopulableVirtualField<Schema> = Schema | EmptyVirtual;
+
+export type PopulableVirtualCollection<Schema> = Schema[] | EmptyVirtual;

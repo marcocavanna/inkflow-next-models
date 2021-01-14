@@ -1,12 +1,10 @@
 import * as mongoose from 'mongoose';
 
-import { APIResponse, Nullable } from '../generic';
+import { APIResponse, Nullable, AugmentedSchema, PopulableVirtualCollection } from '../generic';
+import { ContactEntity } from './Contact';
 
 
 export namespace RegistryEntity {
-
-  /** The set of the populable path */
-  export type PopulableFields = 'team';
 
   /**
    * The Reference interface will be used to
@@ -64,8 +62,7 @@ export namespace RegistryEntity {
    * this document will have virtuals and methods defined
    * into entity schema
    */
-  export interface Document<PopulatedPath extends PopulableFields = never>
-    extends Schema<PopulatedPath>, Methods, Virtuals, mongoose.Document {
+  export interface Document extends AugmentedSchema<Schema>, Methods, AugmentedSchema<Virtuals>, mongoose.Document {
     _id: mongoose.Types.ObjectId;
 
     id: string;
@@ -76,8 +73,7 @@ export namespace RegistryEntity {
    * The json interface type define the documents that will
    * be passed to client using API Endpoint response
    */
-  export interface JSON<PopulatedPath extends PopulableFields = never>
-    extends APIResponse<Schema<PopulatedPath> & Virtuals> {
+  export interface JSON extends APIResponse<Schema & Virtuals> {
     _id: string;
 
     id: string;
@@ -89,7 +85,7 @@ export namespace RegistryEntity {
    * that will be controlled by user and by API
    * this fields will be saved on database
    */
-  export interface Schema<PopulatedPath extends PopulableFields = never> {
+  export interface Schema {
     /** Emails list */
     emails: Reference[];
 
@@ -116,6 +112,9 @@ export namespace RegistryEntity {
 
     /** The Registry Name */
     name: string;
+
+    /** Original Onda ID */
+    ondaID?: Nullable<number>;
 
     /** Pec Emails */
     pecEmails: Reference[];
@@ -152,6 +151,20 @@ export namespace RegistryEntity {
    * Describe all virtuals field
    */
   export interface Virtuals {
+    /** Related Contacts */
+    contacts: PopulableVirtualCollection<ContactEntity.Schema>;
+
+    /** The display name */
+    displayName: string;
+
+    /** Check if Registry has Fiscal Information */
+    hasFiscalInformation: boolean;
+
+    /** Primary Fiscal Information */
+    primaryFiscal: Nullable<string>;
+
+    /** Secondary Fiscal Information */
+    secondaryFiscal: Nullable<string>;
   }
 
 
