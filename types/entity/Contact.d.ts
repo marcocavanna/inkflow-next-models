@@ -33,11 +33,10 @@ export namespace ContactEntity {
    * The json interface type define the documents that will
    * be passed to client using API Endpoint response
    */
-  export interface JSON extends APIResponse<Schema & Virtuals> {
+  export type JSON = APIResponse<AugmentedSchema<Schema> & AugmentedSchema<Virtuals>> & {
     _id: string;
-
     id: string;
-  }
+  };
 
 
   /**
@@ -99,6 +98,17 @@ export namespace ContactEntity {
    * Describe all virtuals field
    */
   export interface Virtuals {
+    /** The display name */
+    displayName: string;
+
+    /** Check if Registry has Fiscal Information */
+    hasFiscalInformation: boolean;
+
+    /** Primary Fiscal Information */
+    primaryFiscal: Nullable<string>;
+
+    /** Secondary Fiscal Information */
+    secondaryFiscal: Nullable<string>;
   }
 
 

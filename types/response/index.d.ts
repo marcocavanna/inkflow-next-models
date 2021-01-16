@@ -1,4 +1,4 @@
-import { RegistryEntity, UserEntity } from '../entity';
+import { ContactEntity, RegistryEntity, UserEntity } from '../entity';
 import { APIResponse, Populated } from '../generic';
 
 
@@ -10,6 +10,10 @@ export namespace Response {
 
       accessToken: string;
     }
+  }
+
+  export namespace Contact {
+    export type Single = ContactEntity.JSON;
   }
 
   export namespace Registry {

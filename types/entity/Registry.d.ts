@@ -33,6 +33,8 @@ export namespace RegistryEntity {
 
     emails: Reference[];
 
+    inlineAddress: string;
+
     isRegisteredOffice: boolean;
 
     isShipmentOffice: boolean;
@@ -73,11 +75,10 @@ export namespace RegistryEntity {
    * The json interface type define the documents that will
    * be passed to client using API Endpoint response
    */
-  export interface JSON extends APIResponse<Schema & Virtuals> {
+  export type JSON = APIResponse<AugmentedSchema<Schema> & AugmentedSchema<Virtuals>> & {
     _id: string;
-
     id: string;
-  }
+  };
 
 
   /**

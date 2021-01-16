@@ -32,7 +32,7 @@ type ObjectIDConversion<T> = T extends mongoose.Types.ObjectId
 
 /** Deep Transform a Document object into a plain Object */
 type DeepCreateObjectTransformer<T> = T extends PrimitiveType
-  ? T
+  ? ObjectIDConversion<T>
   : T extends mongoose.Types.DocumentArray<infer U>
     ? Array<DeepCreateObjectTransformer<U>>
     : T extends object
