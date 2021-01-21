@@ -1,12 +1,9 @@
 import * as mongoose from 'mongoose';
 
-import { APIResponse } from '../generic';
+import { APIResponse, AugmentedSchema } from '../generic';
 
 
 export namespace UserEntity {
-
-  /** The set of the populable path */
-  export type PopulableFields = null;
 
   /**
    * The Model is used to create a new Entity
@@ -22,8 +19,13 @@ export namespace UserEntity {
    * this document will have virtuals and methods defined
    * into entity schema
    */
-  export interface Document<PopulatedPath extends PopulableFields = never>
-    extends Schema<PopulatedPath>, Methods, Virtuals, mongoose.Document {
+  export interface Document extends AugmentedSchema<Schema>, Methods, AugmentedSchema<Virtuals>, mongoose.Document {
+    _id: mongoose.Types.ObjectId;
+
+    id: string;
+  }
+
+  export interface Lookup extends AugmentedSchema<LookupSchema>, AugmentedSchema<Virtuals> {
     _id: mongoose.Types.ObjectId;
 
     id: string;
@@ -34,25 +36,19 @@ export namespace UserEntity {
    * The json interface type define the documents that will
    * be passed to client using API Endpoint response
    */
-  export interface JSON<PopulatedPath extends PopulableFields = never>
-    extends APIResponse<Omit<Schema<PopulatedPath>, 'password'> & Virtuals> {
+  export type JSON = APIResponse<AugmentedSchema<Omit<Schema, 'password'>> & AugmentedSchema<Virtuals>> & {
     _id: string;
-
     id: string;
-  }
+  };
 
 
   /**
-   * Define the Main Schema, describing all field
-   * that will be controlled by user and by API
-   * this fields will be saved on database
+   * User has a reduced Schema used while
+   * lookup entity to save redundant information
    */
-  export interface Schema<PopulatedPath extends PopulableFields = never> {
+  export interface LookupSchema {
     /** The user Email */
     email: string;
-
-    /** Verified Email Checker */
-    emailVerified: boolean;
 
     /** Set/Check if the user is a Commercial Manager */
     isCommercialManager: boolean;
@@ -66,20 +62,31 @@ export namespace UserEntity {
     /** The user Name */
     name: string;
 
-    /** The User Encrypted Password */
-    password: string;
-
     /** Photo URL Location */
     photoURL: string;
+
+    /** The User Surname */
+    surname: string;
+  }
+
+
+  /**
+   * Define the Main Schema, describing all field
+   * that will be controlled by user and by API
+   * this fields will be saved on database
+   */
+  export interface Schema extends LookupSchema {
+    /** Verified Email Checker */
+    emailVerified: boolean;
+
+    /** The User Encrypted Password */
+    password: string;
 
     /** User settings and Preferences */
     preferences: Preferences.Schema;
 
     /** User team Slug */
     team: string;
-
-    /** The User Surname */
-    surname: string;
   }
 
 

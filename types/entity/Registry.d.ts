@@ -70,6 +70,12 @@ export namespace RegistryEntity {
     id: string;
   }
 
+  export interface Lookup extends AugmentedSchema<Schema>, AugmentedSchema<Virtuals> {
+    _id: mongoose.Types.ObjectId;
+
+    id: string;
+  }
+
 
   /**
    * The json interface type define the documents that will
@@ -82,19 +88,35 @@ export namespace RegistryEntity {
 
 
   /**
+   * Registries has a reduced Schema used while
+   * lookup entity to save redundant information
+   */
+  export interface LookupSchema {
+    /** The registry fiscalCode */
+    fiscalCode?: Nullable<string>;
+
+    /** The Registry Name */
+    name: string;
+
+    /** The Registry SubName */
+    subName?: Nullable<string>;
+
+    /** The Registry VAT Number */
+    vatNumber?: Nullable<string>;
+  }
+
+
+  /**
    * Define the Main Schema, describing all field
    * that will be controlled by user and by API
    * this fields will be saved on database
    */
-  export interface Schema {
+  export interface Schema extends LookupSchema {
     /** Emails list */
     emails: Reference[];
 
     /** Faxes lists */
     faxes: Reference[];
-
-    /** The registry fiscalCode */
-    fiscalCode?: Nullable<string>;
 
     /** Registry head office */
     headOffice?: Address;
@@ -111,9 +133,6 @@ export namespace RegistryEntity {
     /** Get or Set if Registry is a Supplier */
     isSupplier: boolean;
 
-    /** The Registry Name */
-    name: string;
-
     /** Original Onda ID */
     ondaID?: Nullable<number>;
 
@@ -126,14 +145,8 @@ export namespace RegistryEntity {
     /** Shipment Offices */
     shipmentOffices: Address[];
 
-    /** The Registry SubName */
-    subName?: Nullable<string>;
-
     /** Related Team */
     team: string;
-
-    /** The Registry VAT Number */
-    vatNumber?: Nullable<string>;
 
     /** Webs */
     webs: Reference[];

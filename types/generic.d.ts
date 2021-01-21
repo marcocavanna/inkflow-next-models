@@ -5,6 +5,9 @@ export type {
   MongoDBAggregationInstruction
 } from './miscellaneous/mongodb-aggregation';
 
+export * from './miscellaneous/mongoose-development-types';
+
+
 /* --------
  * Base Types & Interfaces
  * -------- */
