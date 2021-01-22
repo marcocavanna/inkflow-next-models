@@ -3,6 +3,36 @@ import { AnyObject } from '../generic';
 
 
 /* --------
+ * Plugin Types : Mongoose AutoIncrement
+ * -------- */
+export interface MongooseAutoIncrementPathOptions<Definition extends AnyObject = {}> {
+  /**
+   * Set the field as an Auto Increment field.
+   * As the autoIncrement plugin must use a unique ID,
+   * it will be auto generated if property will be set
+   * as a boolean.
+   * To set a custom id, set as a string
+   */
+  autoIncrement?: boolean | string;
+
+  /** Set discriminator fields */
+  autoIncrementDiscriminators?: string[];
+
+  /** A formatted auto increment field could be used */
+  autoIncrementFormattedField?: string;
+
+  /** Set the Format Function */
+  autoIncrementFormatter?: (counter: number, doc: DocumentOf<Definition>) => Promise<any>;
+
+  /** The increment start */
+  autoIncrementStart?: number;
+
+  /** The increment value */
+  autoIncrementValue?: number;
+}
+
+
+/* --------
  * Plugin Types : Mongoose Calculate
  * -------- */
 export type MongooseCalculateAvailableMiddlewares = 'validate' | 'updateOne' | 'save' | 'remove';
@@ -59,7 +89,9 @@ export type DocumentOf<Definition extends AnyObject> =
   _id: mongoose.Types.ObjectId
 };
 
-export type AugmentedSchemaTypeOptions<Definition extends AnyObject> = MongooseCalculatePathOptions<Definition>
+export type AugmentedSchemaTypeOptions<Definition extends AnyObject> =
+  MongooseAutoIncrementPathOptions<Definition>
+  & MongooseCalculatePathOptions<Definition>
   & MongooseLookupPathOptions<Definition>
   & mongoose.SchemaTypeOpts<any>;
 
