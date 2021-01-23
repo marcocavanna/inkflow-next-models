@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-import { APIResponse, AugmentedSchema, Nullable } from '../generic';
+import { APIResponse, AugmentedSchema, Nullable, PopulableField } from '../generic';
 import { RegistryEntity } from './Registry';
 import { UserEntity } from './User';
 
@@ -67,8 +67,17 @@ export namespace ProductionOrderEntity {
     /** Delivery Notes */
     deliveryNotes: Nullable<string>;
 
+    /** Defined Extra Costs */
+    extraCosts: mongoose.Types.DocumentArray<ExtraCost.Document>;
+
+    /** The Production Order Extra Costs state */
+    extraCostsState: ExtraCost.State;
+
     /** The FSC Type */
     fscType: Nullable<string>;
+
+    /** A list of internal non compliances */
+    internalNonCompliances: mongoose.Types.DocumentArray<InternalNonCompliance.Document>;
 
     /** Check if ProductionOrder is at Budget or at Closure */
     isAtBudget: boolean;
@@ -140,4 +149,71 @@ export namespace ProductionOrderEntity {
   export interface Statics {
   }
 
+
+  /* --------
+   * Children Schemas
+   * -------- */
+  export namespace ExtraCost {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    export type Document = Schema & mongoose.Types.EmbeddedDocument;
+
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    export interface Schema {
+      /** The User who Approved the ExtraCost */
+      approvedBy: PopulableField<UserEntity.Document>;
+
+      /** The date when ExtraCost is Created */
+      date: number;
+
+      /** The description of the ExtraCost */
+      description: string;
+
+      /** The User who Create the ExtraCost */
+      insertBy: PopulableField<UserEntity.Document>;
+
+      /** The value of the ExtraCost */
+      value: number;
+    }
+
+    export enum State {
+      NONE = 0,
+      SCUCCESS = 1,
+      WARNING = 2
+    }
+  }
+
+  export namespace InternalNonCompliance {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    export type Document = Schema & mongoose.Types.EmbeddedDocument;
+
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    export interface Schema {
+      /** The non Compliance Date insert */
+      date: number;
+
+      /** The non Compliance Description */
+      description: string;
+
+      /** If is a Bindery non Compliance */
+      isBindery: boolean;
+
+      /** If is a Digital Printing non Compliance */
+      isDigital: boolean;
+
+      /** If is a Offset Printing non Compliance */
+      isOffset: boolean;
+
+      /** If is a Technical non Compliance */
+      isTechnical: boolean;
+
+      /** The user who insert the non Compliance */
+      insertBy: PopulableField<UserEntity.Document>;
+
+      /** The non compliance value */
+      value: number;
+
+      /** The value description */
+      valueDescription: Nullable<string>;
+    }
+  }
 }

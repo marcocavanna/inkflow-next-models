@@ -74,10 +74,10 @@ export type AugmentedSchema<Schema> = {
  */
 type EmptyVirtual = undefined;
 
-export type PopulableField<Schema> = Schema | mongoose.Types.ObjectId;
+export type PopulableField<Document> = Document | mongoose.Types.ObjectId;
 
-export type PopulableCollection<Schema> = Schema[] | mongoose.Types.ObjectId[];
+export type PopulableCollection<Document> = Document[] | mongoose.Types.ObjectId[];
 
-export type PopulableVirtualField<Schema> = Schema | EmptyVirtual;
+export type PopulableVirtualField<Document> = Document | EmptyVirtual;
 
-export type PopulableVirtualCollection<Schema> = Schema[] | EmptyVirtual;
+export type PopulableVirtualCollection<Document> = Document[] | EmptyVirtual;

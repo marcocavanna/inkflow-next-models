@@ -166,7 +166,7 @@ export namespace RegistryEntity {
    */
   export interface Virtuals {
     /** Related Contacts */
-    contacts: PopulableVirtualCollection<ContactEntity.Schema>;
+    contacts: PopulableVirtualCollection<ContactEntity.Document>;
 
     /** The display name */
     displayName: string;
