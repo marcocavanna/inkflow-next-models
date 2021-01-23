@@ -52,11 +52,23 @@ export interface MongooseCalculatePathOptions<Definition extends AnyObject = {},
   /** Set Middleware */
   calculateOn?: MongooseCalculateAvailableMiddlewares[];
 
-  /** Execution Priority */
+  /**
+   * Set the function execution priority.
+   * Lowest priority will be executed first then higher priority field.
+   */
   priority?: number;
 
-  /** Set if the calculation must be update every time */
-  updateCalculation?: boolean | ((this: DocumentOf<Definition>, old: undefined | Result) => boolean);
+  /**
+   * Set the Update logic of this Calculation Field.
+   * - Set a primitive boolean value to manually set if calculation
+   *   field must be updated or not each time a document will be saved
+   * - Use a function bind to document to check if the calculation field
+   *   must be updated or not; function will receive current field value
+   * - Use an array of path as calculation dependencies: this method work
+   *   like the dependencies array of memoized function, if one of the
+   *   path defined is directly modified, the calculation will be updated
+   */
+  updateCalculation?: boolean | ((this: DocumentOf<Definition>, current: undefined | Result) => boolean) | string[];
 }
 
 
