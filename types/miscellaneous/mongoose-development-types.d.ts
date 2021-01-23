@@ -79,6 +79,15 @@ export interface MongooseLookupPathOptions<Definition extends AnyObject> {
 
 
 /* --------
+ * Internal Path Options
+ * -------- */
+interface InternalSchemaTypeOptions {
+  /** Precision, used with FixedDecimal Type */
+  precision?: number;
+}
+
+
+/* --------
  * Mongoose Augmented Types
  * -------- */
 export type DocumentOf<Definition extends AnyObject> =
@@ -93,6 +102,7 @@ export type AugmentedSchemaTypeOptions<Definition extends AnyObject> =
   MongooseAutoIncrementPathOptions<Definition>
   & MongooseCalculatePathOptions<Definition>
   & MongooseLookupPathOptions<Definition>
+  & InternalSchemaTypeOptions
   & mongoose.SchemaTypeOpts<any>;
 
 export interface AugmentedSchemaType<Definition extends AnyObject> extends mongoose.SchemaType {
