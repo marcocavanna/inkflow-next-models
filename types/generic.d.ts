@@ -38,13 +38,15 @@ type DeepCreateObjectTransformer<T> = T extends PrimitiveType
   ? ObjectIDConversion<T>
   : T extends mongoose.Types.DocumentArray<infer U>
     ? Array<DeepCreateObjectTransformer<U>>
-    : T extends object
-      ? {
-        [V in keyof mongoose.NonFunctionProperties<mongoose.OmitReadonly<T>>]: T[V] extends object
-          ? DeepCreateObjectTransformer<T[V]>
-          : ObjectIDConversion<T[V]>
-      }
-      : ObjectIDConversion<T>;
+    : T extends mongoose.Types.ObjectId
+      ? string
+      : T extends object
+        ? {
+          [V in keyof mongoose.NonFunctionProperties<mongoose.OmitReadonly<T>>]: T[V] extends object
+            ? DeepCreateObjectTransformer<T[V]>
+            : ObjectIDConversion<T[V]>
+        }
+        : ObjectIDConversion<T>;
 
 /** Convert a Backend Object into an API Response */
 export type APIResponse<T> = T extends Array<infer U>

@@ -991,6 +991,14 @@ interface MongoDBAggregationStages<Results extends AnyObject = AnyObject> {
     /** Specify any other field projection */
     [key: string]: 0 | 1 | boolean | Partial<MongoDBAggregationExpressions>
   }
+
+
+  /**
+   * Sorts all input documents and returns them to the pipeline in sorted order.
+   *
+   * @see https://docs.mongodb.com/manual/reference/operator/aggregation/sort/
+   */
+  $sort: Record<string, 1 | -1 | { $meta: 'textScore' }>
 }
 
 type MongoDBAggregationCommand = keyof MongoDBAggregationStages;
