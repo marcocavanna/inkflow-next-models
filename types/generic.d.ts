@@ -83,3 +83,13 @@ export type PopulableCollection<Document> = Document[] | mongoose.Types.ObjectId
 export type PopulableVirtualField<Document> = Document | EmptyVirtual;
 
 export type PopulableVirtualCollection<Document> = Document[] | EmptyVirtual;
+
+
+export type APINamespaces =
+  | 'contacts'
+  | 'processing-phases'
+  | 'production-items'
+  | 'production-orders'
+  | 'registries'
+  | 'time-tracks'
+  | 'users';
