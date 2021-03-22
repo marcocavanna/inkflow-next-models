@@ -2,10 +2,8 @@ import * as mongoose from 'mongoose';
 
 import { APIResponse, AugmentedSchema, Nullable } from '../generic';
 
-import { RegistryEntity } from './Registry';
 
-
-export namespace ContactEntity {
+export namespace MaterialEntity {
 
   /**
    * The Model is used to create a new Entity
@@ -13,7 +11,6 @@ export namespace ContactEntity {
    * saved on Database unless the .save() function will be called
    */
   export interface Model extends Statics, mongoose.Model<Document> {
-    new(doc?: mongoose.DocumentDefinition<Document>): Document;
   }
 
 
@@ -45,47 +42,23 @@ export namespace ContactEntity {
    * this fields will be saved on database
    */
   export interface Schema {
-    /** Single Contact Addresses */
-    addresses: RegistryEntity.Address[];
+    /** The material code */
+    code: string;
 
-    /** Contact Birthday */
-    birthDate?: Nullable<number>;
+    /** Is a Service Material */
+    isService: boolean;
 
-    /** Emails Array */
-    emails: RegistryEntity.Reference[];
-
-    /** Contact Fiscal Code */
-    fiscalCode?: Nullable<string>;
-
-    /** Contact Name */
+    /** Material name */
     name: string;
 
-    /** Contact Note */
-    note?: Nullable<string>;
+    /** Material type */
+    type: string;
 
-    /** Original OndaID */
-    ondaID?: Nullable<string>;
+    /** Material SubType */
+    subType: Nullable<string>;
 
-    /** Phones Array */
-    phones: RegistryEntity.Reference[];
-
-    /** Parent Registry */
-    registryOndaId?: Nullable<number>;
-
-    /** Contact Type */
-    type?: Nullable<string>;
-
-    /** Contact SubName */
-    subName?: Nullable<string>;
-
-    /** Team namespace */
-    team: string;
-
-    /** Contact VAT Number */
-    vatNumber?: Nullable<string>;
-
-    /** Contact Webs Reference */
-    webs: RegistryEntity.Reference[];
+    /** Unit of measure */
+    unit: string;
   }
 
 
@@ -94,6 +67,8 @@ export namespace ContactEntity {
    * and that could use once they are mapped into document
    */
   export interface Methods {
+    /** Return a Material Code */
+    getCode(this: Document): string;
   }
 
 
@@ -101,17 +76,6 @@ export namespace ContactEntity {
    * Describe all virtuals field
    */
   export interface Virtuals {
-    /** The display name */
-    displayName: string;
-
-    /** Check if Registry has Fiscal Information */
-    hasFiscalInformation: boolean;
-
-    /** Primary Fiscal Information */
-    primaryFiscal: Nullable<string>;
-
-    /** Secondary Fiscal Information */
-    secondaryFiscal: Nullable<string>;
   }
 
 

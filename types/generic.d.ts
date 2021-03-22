@@ -34,8 +34,8 @@ type ObjectIDConversion<T> = T extends mongoose.Types.ObjectId
   : T;
 
 /** Deep Transform a Document object into a plain Object */
-type DeepCreateObjectTransformer<T> = T extends PrimitiveType
-  ? ObjectIDConversion<T>
+type DeepCreateObjectTransformer<T> = T extends PrimitiveType | PrimitiveType[]
+  ? T
   : T extends mongoose.Types.DocumentArray<infer U>
     ? Array<DeepCreateObjectTransformer<U>>
     : T extends mongoose.Types.ObjectId
@@ -86,10 +86,20 @@ export type PopulableVirtualCollection<Document> = Document[] | EmptyVirtual;
 
 
 export type APINamespaces =
+  | 'banks'
+  | 'documents'
   | 'contacts'
+  | 'machines'
+  | 'materials'
+  | 'operators'
+  | 'paper'
+  | 'payment-due-dates'
+  | 'payment-types'
   | 'processing-phases'
   | 'production-items'
   | 'production-orders'
   | 'registries'
+  | 'tickets'
   | 'time-tracks'
-  | 'users';
+  | 'users'
+  | 'vat-codes';

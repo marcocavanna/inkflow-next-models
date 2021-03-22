@@ -2,10 +2,8 @@ import * as mongoose from 'mongoose';
 
 import { APIResponse, AugmentedSchema, Nullable } from '../generic';
 
-import { RegistryEntity } from './Registry';
 
-
-export namespace ContactEntity {
+export namespace TicketEntity {
 
   /**
    * The Model is used to create a new Entity
@@ -13,7 +11,6 @@ export namespace ContactEntity {
    * saved on Database unless the .save() function will be called
    */
   export interface Model extends Statics, mongoose.Model<Document> {
-    new(doc?: mongoose.DocumentDefinition<Document>): Document;
   }
 
 
@@ -45,47 +42,29 @@ export namespace ContactEntity {
    * this fields will be saved on database
    */
   export interface Schema {
-    /** Single Contact Addresses */
-    addresses: RegistryEntity.Address[];
+    /** Check or set if Ticket has been archived */
+    archived: boolean;
 
-    /** Contact Birthday */
-    birthDate?: Nullable<number>;
+    /** Ticket description */
+    description: string;
 
-    /** Emails Array */
-    emails: RegistryEntity.Reference[];
-
-    /** Contact Fiscal Code */
-    fiscalCode?: Nullable<string>;
-
-    /** Contact Name */
+    /** Ticket title */
     name: string;
 
-    /** Contact Note */
-    note?: Nullable<string>;
+    /** The ticket priority */
+    priority: Nullable<string>;
 
-    /** Original OndaID */
-    ondaID?: Nullable<string>;
+    /** Ticket sent on timestamp */
+    sentOn: number;
 
-    /** Phones Array */
-    phones: RegistryEntity.Reference[];
-
-    /** Parent Registry */
-    registryOndaId?: Nullable<number>;
-
-    /** Contact Type */
-    type?: Nullable<string>;
-
-    /** Contact SubName */
-    subName?: Nullable<string>;
+    /** Ticket status */
+    status: number;
 
     /** Team namespace */
     team: string;
 
-    /** Contact VAT Number */
-    vatNumber?: Nullable<string>;
-
-    /** Contact Webs Reference */
-    webs: RegistryEntity.Reference[];
+    /** Ticket type */
+    type: string;
   }
 
 
@@ -101,17 +80,6 @@ export namespace ContactEntity {
    * Describe all virtuals field
    */
   export interface Virtuals {
-    /** The display name */
-    displayName: string;
-
-    /** Check if Registry has Fiscal Information */
-    hasFiscalInformation: boolean;
-
-    /** Primary Fiscal Information */
-    primaryFiscal: Nullable<string>;
-
-    /** Secondary Fiscal Information */
-    secondaryFiscal: Nullable<string>;
   }
 
 

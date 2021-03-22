@@ -1,6 +1,7 @@
 import * as mongoose from 'mongoose';
 
 import { APIResponse, AugmentedSchema, Nullable, PopulableField } from '../generic';
+import { MachineEntity } from './Machine';
 import { RegistryEntity } from './Registry';
 import { UserEntity } from './User';
 
@@ -68,7 +69,7 @@ export namespace ProductionOrderEntity {
     deliveryNotes: Nullable<string>;
 
     /** Defined Extra Costs */
-    extraCosts: mongoose.Types.DocumentArray<ExtraCost.Document>;
+    extraCosts: ExtraCost.Document[];
 
     /** The Production Order Extra Costs state */
     extraCostsState: ExtraCost.State;
@@ -77,13 +78,16 @@ export namespace ProductionOrderEntity {
     fscType: Nullable<string>;
 
     /** A list of internal non compliances */
-    internalNonCompliances: mongoose.Types.DocumentArray<InternalNonCompliance.Document>;
+    internalNonCompliances: InternalNonCompliance.Document[];
 
     /** Check if ProductionOrder is at Budget or at Closure */
     isAtBudget: boolean;
 
     /** Check if ProductionOrder is Billable */
     isBillable: boolean;
+
+    /** Check if a ProductionOrder is Billable before fully delivered */
+    isBillableBeforeShipment: boolean;
 
     /** Check if ProductionOrder is FSC */
     isFSC: boolean;
@@ -116,6 +120,9 @@ export namespace ProductionOrderEntity {
 
     /** Technical Notes */
     technicalNotes: Nullable<string>;
+
+    /** Temporary printing size */
+    temporaryPrintingSize: TemporaryPrintingSize.Document[];
 
     /** The Production Order Reference Year */
     year: number;
@@ -155,7 +162,7 @@ export namespace ProductionOrderEntity {
    * -------- */
   export namespace ExtraCost {
     // eslint-disable-next-line @typescript-eslint/no-shadow
-    export type Document = Schema & mongoose.Types.EmbeddedDocument;
+    export type Document = Schema & mongoose.Types.Subdocument;
 
     // eslint-disable-next-line @typescript-eslint/no-shadow
     export interface Schema {
@@ -184,7 +191,7 @@ export namespace ProductionOrderEntity {
 
   export namespace InternalNonCompliance {
     // eslint-disable-next-line @typescript-eslint/no-shadow
-    export type Document = Schema & mongoose.Types.EmbeddedDocument;
+    export type Document = Schema & mongoose.Types.Subdocument;
 
     // eslint-disable-next-line @typescript-eslint/no-shadow
     export interface Schema {
@@ -214,6 +221,49 @@ export namespace ProductionOrderEntity {
 
       /** The value description */
       valueDescription: Nullable<string>;
+    }
+  }
+
+  export namespace TemporaryPrintingSize {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    export type Document = Schema & mongoose.Types.Subdocument;
+
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    export interface Schema {
+      /** The provisioned machine */
+      machine: PopulableField<MachineEntity.Document>;
+
+      /** Any notes */
+      notes: Nullable<string>;
+
+      /** The overridden scheduled machine */
+      overriddenScheduledMachine: PopulableField<MachineEntity.Document>;
+
+      /** An overridden scheduled hours */
+      overridedScheduledHours: number;
+
+      /** The part */
+      part: Nullable<string>;
+
+      /** The scheduled order */
+      scheduleOrder: number;
+
+      /** Phase timing */
+      timing: {
+        /** Expected extra phase time */
+        expectedExtraTime: number;
+        /** The expected production time in minutes */
+        expectedProductionTime: number;
+        /** The expected remaining time in minutes */
+        expectedRemainingTime: number;
+        /** The startup time */
+        expectedStartupTime: number;
+        /** The production time multiplier */
+        productionTimeMultiplier: number;
+      };
+
+      /** Total quantity to produce */
+      totalQuantityToProduce: number;
     }
   }
 }

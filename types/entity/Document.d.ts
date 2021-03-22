@@ -1,11 +1,10 @@
 import * as mongoose from 'mongoose';
 
-import { APIResponse, AugmentedSchema, Nullable } from '../generic';
+import { APIResponse, AugmentedSchema, PopulableField } from '../generic';
+import { UserEntity } from './User';
 
-import { RegistryEntity } from './Registry';
 
-
-export namespace ContactEntity {
+export namespace DocumentEntity {
 
   /**
    * The Model is used to create a new Entity
@@ -13,7 +12,6 @@ export namespace ContactEntity {
    * saved on Database unless the .save() function will be called
    */
   export interface Model extends Statics, mongoose.Model<Document> {
-    new(doc?: mongoose.DocumentDefinition<Document>): Document;
   }
 
 
@@ -45,47 +43,38 @@ export namespace ContactEntity {
    * this fields will be saved on database
    */
   export interface Schema {
-    /** Single Contact Addresses */
-    addresses: RegistryEntity.Address[];
+    /** Original filename extension */
+    extension: string;
 
-    /** Contact Birthday */
-    birthDate?: Nullable<number>;
+    /** File MD5 Hash */
+    md5: string;
 
-    /** Emails Array */
-    emails: RegistryEntity.Reference[];
+    /** File mimetype */
+    mimetype: string;
 
-    /** Contact Fiscal Code */
-    fiscalCode?: Nullable<string>;
-
-    /** Contact Name */
+    /** The file name to display */
     name: string;
 
-    /** Contact Note */
-    note?: Nullable<string>;
+    /** Original fileName */
+    originalFilename: string;
 
-    /** Original OndaID */
-    ondaID?: Nullable<string>;
+    /** The parent document */
+    parent: mongoose.Schema.Types.ObjectId,
 
-    /** Phones Array */
-    phones: RegistryEntity.Reference[];
+    /** The parent model */
+    parentModel: string;
 
-    /** Parent Registry */
-    registryOndaId?: Nullable<number>;
+    /** The user who upload the file */
+    sender: PopulableField<UserEntity.Document>;
 
-    /** Contact Type */
-    type?: Nullable<string>;
+    /** Sent timestamp */
+    sentOn: number;
 
-    /** Contact SubName */
-    subName?: Nullable<string>;
+    /** File size */
+    size: number;
 
     /** Team namespace */
     team: string;
-
-    /** Contact VAT Number */
-    vatNumber?: Nullable<string>;
-
-    /** Contact Webs Reference */
-    webs: RegistryEntity.Reference[];
   }
 
 
@@ -101,17 +90,6 @@ export namespace ContactEntity {
    * Describe all virtuals field
    */
   export interface Virtuals {
-    /** The display name */
-    displayName: string;
-
-    /** Check if Registry has Fiscal Information */
-    hasFiscalInformation: boolean;
-
-    /** Primary Fiscal Information */
-    primaryFiscal: Nullable<string>;
-
-    /** Secondary Fiscal Information */
-    secondaryFiscal: Nullable<string>;
   }
 
 

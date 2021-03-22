@@ -1,7 +1,10 @@
 import * as mongoose from 'mongoose';
 
-import { APIResponse, Nullable, AugmentedSchema, PopulableVirtualCollection } from '../generic';
+import { APIResponse, Nullable, AugmentedSchema, PopulableVirtualCollection, PopulableField } from '../generic';
+import { BankEntity } from './Bank';
 import { ContactEntity } from './Contact';
+import { PaymentDueDateEntity } from './PaymentDueDate';
+import { VatCodeEntity } from './VatCode';
 
 
 export namespace RegistryEntity {
@@ -112,6 +115,9 @@ export namespace RegistryEntity {
    * this fields will be saved on database
    */
   export interface Schema extends LookupSchema {
+    /** Banks List */
+    banks: BankEntity.Document[];
+
     /** Emails list */
     emails: Reference[];
 
@@ -136,6 +142,12 @@ export namespace RegistryEntity {
     /** Original Onda ID */
     ondaID?: Nullable<number>;
 
+    /** Registry Payment Due Date */
+    paymentDueDate: {
+      asCustomer: PopulableField<PaymentDueDateEntity.Document>,
+      asSupplier: PopulableField<PaymentDueDateEntity.Document>
+    }
+
     /** Pec Emails */
     pecEmails: Reference[];
 
@@ -147,6 +159,12 @@ export namespace RegistryEntity {
 
     /** Related Team */
     team: string;
+
+    /** Registry Vat Code */
+    vatCodes: {
+      asCustomer: PopulableField<VatCodeEntity.Document>,
+      asSupplier: PopulableField<VatCodeEntity.Document>
+    },
 
     /** Webs */
     webs: Reference[];

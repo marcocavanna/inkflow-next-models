@@ -1,4 +1,12 @@
-import { ContactEntity, RegistryEntity, UserEntity, ProductionOrderEntity } from '../entity';
+import {
+  ContactEntity,
+  MachineEntity,
+  OperatorEntity,
+  ProductionOrderEntity,
+  RegistryEntity,
+  UserEntity
+} from '../entity';
+
 import { APIResponse, Populated } from '../generic';
 
 
@@ -6,7 +14,7 @@ export namespace Response {
 
   export namespace Auth {
     export interface Login {
-      userData: APIResponse<Omit<UserEntity.JSON, 'password'>>;
+      userData: User.Single;
 
       accessToken: string;
     }
@@ -14,6 +22,18 @@ export namespace Response {
 
   export namespace Contact {
     export type Single = ContactEntity.JSON;
+  }
+
+  export namespace Machine {
+    export type Single = MachineEntity.JSON;
+
+    export type List = Single[];
+  }
+
+  export namespace Operator {
+    export type Single = OperatorEntity.JSON;
+
+    export type List = Single[];
   }
 
   export namespace ProductionOrder {
@@ -98,4 +118,9 @@ export namespace Response {
     export type LeanList = SingleLean[];
   }
 
+  export namespace User {
+    export type Single = APIResponse<Omit<UserEntity.JSON, 'password'>>;
+
+    export type List = Single[];
+  }
 }

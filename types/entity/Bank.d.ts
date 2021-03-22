@@ -5,7 +5,7 @@ import { APIResponse, AugmentedSchema, Nullable } from '../generic';
 import { RegistryEntity } from './Registry';
 
 
-export namespace ContactEntity {
+export namespace BankEntity {
 
   /**
    * The Model is used to create a new Entity
@@ -13,7 +13,6 @@ export namespace ContactEntity {
    * saved on Database unless the .save() function will be called
    */
   export interface Model extends Statics, mongoose.Model<Document> {
-    new(doc?: mongoose.DocumentDefinition<Document>): Document;
   }
 
 
@@ -45,47 +44,38 @@ export namespace ContactEntity {
    * this fields will be saved on database
    */
   export interface Schema {
-    /** Single Contact Addresses */
-    addresses: RegistryEntity.Address[];
+    /** Bank ABI Code */
+    ABI: Nullable<string>;
 
-    /** Contact Birthday */
-    birthDate?: Nullable<number>;
+    /** Bank Account Code */
+    accountCode: Nullable<string>;
 
-    /** Emails Array */
-    emails: RegistryEntity.Reference[];
+    /** Bank Address */
+    address: Nullable<RegistryEntity.Address>;
 
-    /** Contact Fiscal Code */
-    fiscalCode?: Nullable<string>;
+    /** Bank Branch */
+    branch: Nullable<string>;
 
-    /** Contact Name */
+    /** Bank CAB */
+    CAB: Nullable<string>;
+
+    /** Account IBAN */
+    IBAN: Nullable<string>;
+
+    /** Check if is System Bank */
+    isMyBank: boolean;
+
+    /** Bank Name */
     name: string;
 
-    /** Contact Note */
-    note?: Nullable<string>;
+    /** Original Onda ID */
+    ondaID: Nullable<string>;
 
-    /** Original OndaID */
-    ondaID?: Nullable<string>;
+    /** Bank Swift Code */
+    SWIFT: Nullable<string>;
 
-    /** Phones Array */
-    phones: RegistryEntity.Reference[];
-
-    /** Parent Registry */
-    registryOndaId?: Nullable<number>;
-
-    /** Contact Type */
-    type?: Nullable<string>;
-
-    /** Contact SubName */
-    subName?: Nullable<string>;
-
-    /** Team namespace */
+    /** Related team namespace */
     team: string;
-
-    /** Contact VAT Number */
-    vatNumber?: Nullable<string>;
-
-    /** Contact Webs Reference */
-    webs: RegistryEntity.Reference[];
   }
 
 
@@ -101,17 +91,6 @@ export namespace ContactEntity {
    * Describe all virtuals field
    */
   export interface Virtuals {
-    /** The display name */
-    displayName: string;
-
-    /** Check if Registry has Fiscal Information */
-    hasFiscalInformation: boolean;
-
-    /** Primary Fiscal Information */
-    primaryFiscal: Nullable<string>;
-
-    /** Secondary Fiscal Information */
-    secondaryFiscal: Nullable<string>;
   }
 
 

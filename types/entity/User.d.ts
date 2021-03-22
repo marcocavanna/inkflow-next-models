@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-import { APIResponse, AugmentedSchema } from '../generic';
+import { APIResponse, AugmentedSchema, Nullable } from '../generic';
 
 
 export namespace UserEntity {
@@ -76,8 +76,17 @@ export namespace UserEntity {
    * this fields will be saved on database
    */
   export interface Schema extends LookupSchema {
+    /** Timestamp of Connection time */
+    connectedOn: Nullable<number>;
+
     /** Verified Email Checker */
     emailVerified: boolean;
+
+    /** Users is currently online */
+    isOnline: boolean;
+
+    /** Last online timestamp */
+    lastOnline: Nullable<number>;
 
     /** The User Encrypted Password */
     password: string;

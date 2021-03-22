@@ -2,10 +2,8 @@ import * as mongoose from 'mongoose';
 
 import { APIResponse, AugmentedSchema, Nullable } from '../generic';
 
-import { RegistryEntity } from './Registry';
 
-
-export namespace ContactEntity {
+export namespace OperatorEntity {
 
   /**
    * The Model is used to create a new Entity
@@ -13,7 +11,6 @@ export namespace ContactEntity {
    * saved on Database unless the .save() function will be called
    */
   export interface Model extends Statics, mongoose.Model<Document> {
-    new(doc?: mongoose.DocumentDefinition<Document>): Document;
   }
 
 
@@ -45,47 +42,37 @@ export namespace ContactEntity {
    * this fields will be saved on database
    */
   export interface Schema {
-    /** Single Contact Addresses */
-    addresses: RegistryEntity.Address[];
 
-    /** Contact Birthday */
-    birthDate?: Nullable<number>;
+    /** Last logins timestamp date */
+    allLoginsDateTime: number[];
 
-    /** Emails Array */
-    emails: RegistryEntity.Reference[];
+    /** Operator first name */
+    firstName: string;
 
-    /** Contact Fiscal Code */
-    fiscalCode?: Nullable<string>;
+    /** Set if operator is an Admin */
+    isAdmin: boolean;
 
-    /** Contact Name */
-    name: string;
+    /** Set if operator is a Binder */
+    isBinder: boolean;
 
-    /** Contact Note */
-    note?: Nullable<string>;
+    /** Set if operator is a Delivery Man */
+    isDeliveryMan: boolean;
 
-    /** Original OndaID */
-    ondaID?: Nullable<string>;
+    /** Set if operator is a Printer */
+    isPrinter: boolean;
 
-    /** Phones Array */
-    phones: RegistryEntity.Reference[];
+    /** Set if operator is an internal system operator */
+    isSystem: boolean;
 
-    /** Parent Registry */
-    registryOndaId?: Nullable<number>;
+    /** Operator last name */
+    lastName: Nullable<string>;
 
-    /** Contact Type */
-    type?: Nullable<string>;
-
-    /** Contact SubName */
-    subName?: Nullable<string>;
+    /** Operator login PIN */
+    PIN: string;
 
     /** Team namespace */
     team: string;
 
-    /** Contact VAT Number */
-    vatNumber?: Nullable<string>;
-
-    /** Contact Webs Reference */
-    webs: RegistryEntity.Reference[];
   }
 
 
@@ -101,17 +88,17 @@ export namespace ContactEntity {
    * Describe all virtuals field
    */
   export interface Virtuals {
-    /** The display name */
+    /** Concatenated names */
     displayName: string;
 
-    /** Check if Registry has Fiscal Information */
-    hasFiscalInformation: boolean;
+    /** Operator initials */
+    initials: string;
 
-    /** Primary Fiscal Information */
-    primaryFiscal: Nullable<string>;
+    /** Last login timestamp */
+    lastLogin: number | null;
 
-    /** Secondary Fiscal Information */
-    secondaryFiscal: Nullable<string>;
+    /** Operator types */
+    types: string[];
   }
 
 

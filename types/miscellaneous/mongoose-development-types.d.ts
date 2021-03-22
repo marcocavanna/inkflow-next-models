@@ -38,7 +38,7 @@ export interface MongooseAutoIncrementPathOptions<Definition extends AnyObject =
 export type MongooseCalculateAvailableMiddlewares = 'validate' | 'updateOne' | 'save' | 'remove';
 
 export type MongooseCalculateFunction<Definition extends AnyObject = {}, Result> = (
-  this: DocumentOf<Definition>,
+  this: DocumentOf<Definition> | any,
   old: undefined | Result
 ) => Result | Promise<Result>;
 

@@ -2,10 +2,8 @@ import * as mongoose from 'mongoose';
 
 import { APIResponse, AugmentedSchema, Nullable } from '../generic';
 
-import { RegistryEntity } from './Registry';
 
-
-export namespace ContactEntity {
+export namespace MachineEntity {
 
   /**
    * The Model is used to create a new Entity
@@ -13,7 +11,6 @@ export namespace ContactEntity {
    * saved on Database unless the .save() function will be called
    */
   export interface Model extends Statics, mongoose.Model<Document> {
-    new(doc?: mongoose.DocumentDefinition<Document>): Document;
   }
 
 
@@ -45,47 +42,38 @@ export namespace ContactEntity {
    * this fields will be saved on database
    */
   export interface Schema {
-    /** Single Contact Addresses */
-    addresses: RegistryEntity.Address[];
+    /** Base machine hourly cost */
+    hourlyCost: number;
 
-    /** Contact Birthday */
-    birthDate?: Nullable<number>;
+    /** Base machine hourly value */
+    hourlyValue: number;
 
-    /** Emails Array */
-    emails: RegistryEntity.Reference[];
+    /** Machine type is Binder */
+    isBindery: boolean;
 
-    /** Contact Fiscal Code */
-    fiscalCode?: Nullable<string>;
+    /** Machine type is Packager */
+    isPackager: boolean;
 
-    /** Contact Name */
+    /** Machine type is Printer */
+    isPrinter: boolean;
+
+    /** The machine name */
     name: string;
 
-    /** Contact Note */
-    note?: Nullable<string>;
+    /** Printing Data */
+    printing: Nullable<PrintingSettings.Document>;
 
-    /** Original OndaID */
-    ondaID?: Nullable<string>;
+    /** Producer Name */
+    producer: Nullable<string>;
 
-    /** Phones Array */
-    phones: RegistryEntity.Reference[];
-
-    /** Parent Registry */
-    registryOndaId?: Nullable<number>;
-
-    /** Contact Type */
-    type?: Nullable<string>;
-
-    /** Contact SubName */
-    subName?: Nullable<string>;
+    /** The purchase date */
+    purchaseDate: Nullable<number>;
 
     /** Team namespace */
     team: string;
 
-    /** Contact VAT Number */
-    vatNumber?: Nullable<string>;
-
-    /** Contact Webs Reference */
-    webs: RegistryEntity.Reference[];
+    /** The machine type */
+    type: Nullable<string>;
   }
 
 
@@ -101,17 +89,14 @@ export namespace ContactEntity {
    * Describe all virtuals field
    */
   export interface Virtuals {
-    /** The display name */
+    /** Machine displayName */
     displayName: string;
 
-    /** Check if Registry has Fiscal Information */
-    hasFiscalInformation: boolean;
+    /** Machine initials */
+    initials: string;
 
-    /** Primary Fiscal Information */
-    primaryFiscal: Nullable<string>;
-
-    /** Secondary Fiscal Information */
-    secondaryFiscal: Nullable<string>;
+    /** Machine types */
+    types: string[];
   }
 
 
@@ -122,4 +107,39 @@ export namespace ContactEntity {
   export interface Statics {
   }
 
+
+  /**
+   * Printing Settings Data
+   */
+  export namespace PrintingSettings {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    export type Document = Schema & mongoose.Types.Subdocument;
+
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    export interface Schema {
+      /** Maximum Printer Colours Count */
+      coloursCount: number;
+
+      /** Check if is Digital Printer */
+      isDigital: boolean;
+
+      /** Check if is Offset Printer */
+      isOffset: boolean;
+
+      /** Check if is UV Printer */
+      isUV: boolean;
+
+      /** Set the Max Printing Size */
+      maxPrintSize: {
+        width: number;
+        height: number;
+      };
+
+      /** Set the Minimum Printing Size */
+      minPrintingSize: {
+        width: number;
+        height: number;
+      };
+    }
+  }
 }
